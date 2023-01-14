@@ -11,6 +11,7 @@ function love.load()
     highscore = 0
     score = 0
     timer = 25
+    somekey = ''
     
     
     
@@ -38,13 +39,26 @@ function love.load()
         
     -- Mouse config
     love.mouse.setVisible(false)
+
+    -- Sound config
+    src1 = love.audio.newSource('Ghost_Janitor_BASSFISH.wav', 'stream')
+    src2 = love.audio.newSource('m1-garand-rifle-80192.mp3', 'static')
+    src3 = love.audio.newSource('ducks1-32839.mp3', 'stream')
+
 end
 
 function love.update(dt)
     -- Particles refresh
     particles:update(dt)
     particlesTimer = particlesTimer - dt
-    
+ 
+if src1:isPlaying() == false then
+    src1:play()   
+end
+
+if src3:isPlaying() == false then
+    src3:play()   
+end
     
     -- Main game loop
     if timer > 0 and gameState == 2 then
@@ -90,7 +104,7 @@ function love.draw()
    love.graphics.print('highscore  '.. highscore, 625, 20)
    love.graphics.print(math.ceil(timer), 390, 20)
    if gameState == 1 then
-        love.graphics.print('click to start playing', 200, 300)
+        love.graphics.print('click to start playing, click w or mouse to shoot and r to reset', 200, 300)
    end
    
    -- Crosshair
@@ -99,6 +113,10 @@ end
 
 -- Mouse
 function love.mousepressed(x,  y, button, istouch, presses )
+    if gameState == 2 then
+        src2:stop()
+        src2:play()
+    end
     if button == 1 and gameState == 2 then
         local mouseToTarget = distanceBetween(x, y, target.x, target.y )
         if mouseToTarget <= target.radius then
@@ -120,4 +138,35 @@ end
 
 function distanceBetween(x1, y1, x2, y2)
     return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+end
+function love.keypressed(key, scancode, isrepeat)
+    if gameState == 2 then
+        src2:stop()
+        src2:play()
+    end
+    somekey = key
+    x,y = love.mouse.getPosition()
+    if key == 'w' and gameState == 2 then
+        local mouseToTarget = distanceBetween(x, y, target.x, target.y )
+        if mouseToTarget <= target.radius then
+            score = score + 1
+            particlesTimer = .5
+            emitParticles = true
+            particleX, particleY = love.mouse.getPosition()
+            particles:emit(3)
+            target.x = math.random(5, love.graphics.getWidth())
+            target.y = math.random(5, love.graphics.getHeight())
+
+        end
+    end
+
+    if key == 'r' and gameState == 2 then
+        score = 0
+        timer = 0 
+        gameState = 1
+    end
+
+    if gameState == 1 then
+       gameState = 2
+    end
 end
