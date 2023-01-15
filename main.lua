@@ -41,9 +41,9 @@ function love.load()
     love.mouse.setVisible(false)
 
     -- Sound config
-    src1 = love.audio.newSource('Ghost_Janitor_BASSFISH.wav', 'stream')
-    src2 = love.audio.newSource('m1-garand-rifle-80192.mp3', 'static')
-    src3 = love.audio.newSource('ducks1-32839.mp3', 'stream')
+    src1 = love.audio.newSource('sounds/Ghost_Janitor_BASSFISH.wav', 'stream')
+    src2 = love.audio.newSource('sounds/m1-garand-rifle-80192.mp3', 'static')
+    src3 = love.audio.newSource('sounds/ducks1-32839.mp3', 'stream')
 
 end
 
